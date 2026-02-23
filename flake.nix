@@ -47,10 +47,18 @@
 
         libPath = pkgs.lib.makeLibraryPath buildInputs;
 
-        src = craneLib.cleanCargoSource ./.;
+        cargoSrc = craneLib.cleanCargoSource ./.;
+
+        src = pkgs.lib.cleanSourceWith {
+          src = ./.;
+          filter = path: type:
+            (craneLib.filterCargoSources path type)
+            || (pkgs.lib.hasInfix "/data/" path);
+        };
 
         cargoArtifacts = craneLib.buildDepsOnly {
-          inherit src buildInputs nativeBuildInputs;
+          src = cargoSrc;
+          inherit buildInputs nativeBuildInputs;
           strictDeps = true;
         };
 
@@ -59,6 +67,9 @@
           strictDeps = true;
           postFixup = ''
             patchelf --set-rpath "${libPath}" $out/bin/firechannel
+          '';
+          postInstall = ''
+            install -Dm0644 data/io.github.daytimeforninja.FireChannel.desktop $out/share/applications/io.github.daytimeforninja.FireChannel.desktop
           '';
         };
 

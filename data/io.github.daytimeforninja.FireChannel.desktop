@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Fire Channel
+Comment=Tummo inner fire breathing practice
+Exec=firechannel
+Icon=io.github.daytimeforninja.FireChannel
+Terminal=false
+Type=Application
+Categories=Utility;Health;
+Keywords=breathing;meditation;tummo;tibetan;
